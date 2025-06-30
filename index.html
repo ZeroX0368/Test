@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    rel="icon"
+    href="https://cdn.discordapp.com/attachments/1371029534299656202/1387466602642931762/file_00000000c93461f7be1f93c2cbc209b3.png"
+    type="image/png"
+  />
+
+  <meta property="og:author" content="YANZZ OFFICIAL - ! CEO YANZZ" />
+  <title>YANZZ - The main website that collects other websites</title>
+  <meta
+    name="description"
+    content="YANZZ is the ultimate gateway by ! CEO YANZZ — combining every essential tool, script, and powerful system in one ultra-fast, ultra-sleek platform. Built different."
+  />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://yanzz-ios.github.io/" />
+  <meta property="og:title" content="YANZZ - The main website that collects other websites" />
+  <meta
+    property="og:description"
+    content="YANZZ is the ultimate gateway by ! CEO YANZZ — combining every essential tool, script, and powerful system in one ultra-fast, ultra-sleek platform. Built different."
+  />
+  <meta
+    property="og:image"
+    content="https://cdn.discordapp.com/attachments/1371029534299656202/1387451538498392114/file_00000000c93461f7be1f93c2cbc209b3.png"
+  />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    crossorigin="anonymous"
+  />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="32" width="32"><circle cx="16" cy="16" r="8" fill="white" stroke="cyan" stroke-width="2"/></svg>') 16 16, auto;
+    }
+    body {
+      font-family: 'Kanit', sans-serif;
+      color: #fff;
+      background: #0f172a;
+      overflow-y: auto;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #loader .spinner {
+      width: 50px;
+      height: 50px;
+      border: 6px solid rgba(255, 255, 255, 0.2);
+      border-top: 6px solid #00aaff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    canvas#bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: #0f172a;
+      display: block;
+    }
+
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      width: 90%;
+      max-width: 1200px;
+      margin: 5vh auto 3rem;
+      padding: 0 1rem;
+      z-index: 1;
+    }
+
+    .link-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      padding: clamp(1rem, 2vw, 1.75rem);
+      background: linear-gradient(135deg, #004e92, #000428);
+      border-radius: 1.25rem;
+      text-decoration: none;
+      color: #e0f7ff;
+      font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+      font-weight: 700;
+      box-shadow:
+        0 0 10px #00aaff88,
+        0 4px 15px #00aaff66;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      user-select: none;
+    }
+    .link-item:hover {
+      transform: translateY(-7px) scale(1.07);
+      box-shadow:
+        0 0 20px #00d0ffcc,
+        0 8px 30px #00d0ffaa;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: #fff;
+    }
+    .link-item::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      background: rgba(0, 170, 255, 0.25);
+      opacity: 0;
+      top: 50%;
+      left: 50%;
+      pointer-events: none;
+      transform-origin: center;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform 0.6s ease, opacity 1s ease;
+    }
+    .link-item:active::after {
+      transform: translate(-50%, -50%) scale(4);
+      opacity: 1;
+      transition: 0s;
+    }
+
+    .link-text {
+      display: flex;
+      align-items: center;
+      gap: 0.6em;
+      width: 100%;
+    }
+    .link-text i {
+      font-size: 1.5em;
+      color: #00aaff;
+      transition: color 0.3s ease;
+      flex-shrink: 0;
+    }
+    .link-item:hover .link-text i {
+      color: #00d0ff;
+    }
+
+    .click-count {
+      margin-top: 0.6rem;
+      font-size: 0.95rem;
+      color: #a0d9ffcc;
+      font-weight: 500;
+      user-select: none;
+    }
+
+    .status-green,
+    .status-red {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 12px;
+      user-select: none;
+      pointer-events: none;
+      box-shadow: 0 0 8px;
+      z-index: 10;
+      white-space: nowrap;
+    }
+    .status-green {
+      background-color: #2ecc71;
+      color: white;
+      box-shadow: 0 0 8px #2ecc71cc;
+    }
+    .status-red {
+      background-color: #d32f2f;
+      color: white;
+      box-shadow: 0 0 8px #d32f2fcc;
+    }
+
+    footer {
+      text-align: center;
+      margin: 0 0 1.5rem;
+      font-size: 0.85rem;
+      color: #88cfffcc;
+      user-select: none;
+      z-index: 1;
+      position: relative;
+    }
+
+    @media (max-width: 600px) {
+      .link-grid {
+        gap: 1rem;
+      }
+      .link-item {
+        font-size: 1.1rem;
+        padding: 1.25rem;
+      }
+      .link-text i {
+        font-size: 1.3em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <canvas id="bg"></canvas>
+
+  <div class="link-grid" id="linkGrid">
+    <a
+      class="link-item"
+      href="https://yanzz-ios.github.io/genkey"
+      target="_blank"
+      rel="noopener"
+      data-id="genkey"
+      aria-label="GEN KEY"
+    >
+      <div class="status-green">Online</div>
+      <div class="link-text">
+        <i class="fas fa-key" aria-hidden="true"></i>GEN KEY
+      </div>
+      <div class="click-count">
+        Clicks: <span class="count" data-id="genkey">0</span>
+      </div>
+    </a>
+
+    <a
+      class="link-item"
+      href="https://yanzz-ios.github.io/update"
+      target="_blank"
+      rel="noopener"
+      data-id="update"
+      aria-label="CHECK UPDATES"
+    >
+      <div class="status-green">Online</div>
+      <div class="link-text">
+        <i class="fas fa-sync-alt" aria-hidden="true"></i>CHECK UPDATES
+      </div>
+      <div class="click-count">
+        Clicks: <span class="count" data-id="update">0</span>
+      </div>
+    </a>
+
+    <a
+      class="link-item"
+      href="https://yanzz-ios.github.io/addapi"
+      target="_blank"
+      rel="noopener"
+      data-id="addapi"
+      aria-label="ADD API"
+    >
+      <div class="status-green">Online</div>
+      <div class="link-text">
+        <i class="fas fa-plus" aria-hidden="true"></i>ADD API
+      </div>
+      <div class="click-count">
+        Clicks: <span class="count" data-id="addapi">0</span>
+      </div>
+    </a>
+
+    <a
+      class="link-item"
+      href="https://yanzz-ios.github.io/invite"
+      target="_blank"
+      rel="noopener"
+      data-id="invite"
+      aria-label="INVITE BOT"
+    >
+      <div class="status-green">Online</div>
+      <div class="link-text">
+        <i class="fas fa-robot" aria-hidden="true"></i>INVITE BOT
+      </div>
+      <div class="click-count">
+        Clicks: <span class="count" data-id="invite">0</span>
+      </div>
+    </a>
+
+    <a
+      class="link-item"
+      href="https://yanzz-ios.github.io/command.html"
+      target="_blank"
+      rel="noopener"
+      data-id="command"
+      aria-label="BOT COMMANDS"
+    >
+      <div class="status-green">Online</div>
+      <div class="link-text">
+        <i class="fas fa-list" aria-hidden="true"></i>BOT COMMANDS
+      </div>
+      <div class="click-count">
+        Clicks: <span class="count" data-id="command">0</span>
+      </div>
+    </a>
+
+    <a
+      class="link-item"
+      href="https://yanzz-ios.github.io/roblox-version"
+      target="_blank"
+      rel="noopener"
+      data-id="robloxver"
+      aria-label="Roblox Version"
+    >
+      <div class="status-green">Online</div>
+      <div class="link-text">
+        <i class="fas fa-cube" aria-hidden="true"></i>ROBLOX VERSION
+      </div>
+      <div class="click-count">
+        Clicks: <span class="count" data-id="robloxver">0</span>
+      </div>
+    </a>
+
+    <a
+      class="link-item"
+      href="https://yanzz-ios.github.io/blox-fruits"
+      target="_blank"
+      rel="noopener"
+      data-id="bloxfruits"
+      aria-label="BLOX FRUITS"
+    >
+      <div class="status-green">Online</div>
+      <div class="link-text">
+        <i class="fas fa-apple-alt" aria-hidden="true"></i>BLOX FRUITS
+      </div>
+      <div class="click-count">
+        Clicks: <span class="count" data-id="bloxfruits">0</span>
+      </div>
+    </a>
+
+    <a
+      class="link-item"
+      href="https://yanzz-ios.github.io/grow-a-garden-stock"
+      target="_blank"
+      rel="noopener"
+      data-id="gardenstock"
+      aria-label="GROW A GARDEN"
+    >
+      <div class="status-green">Online</div>
+      <div class="link-text">
+        <i class="fas fa-seedling" aria-hidden="true"></i>GROW A GARDEN
+      </div>
+      <div class="click-count">
+        Clicks: <span class="count" data-id="gardenstock">0</span>
+      </div>
+    </a>
+
+    <a
+      class="link-item"
+      href="https://yanzz-ios.github.io/profile"
+      target="_blank"
+      rel="noopener"
+      data-id="profile"
+      aria-label="PROFILE"
+    >
+      <div class="status-green">Online</div>
+      <div class="link-text">
+        <i class="fas fa-user-circle" aria-hidden="true"></i>PROFILE
+      </div>
+      <div class="click-count">
+        Clicks: <span class="count" data-id="profile">0</span>
+      </div>
+    </a>
+
+    <a
+      class="link-item"
+      href="https://yanzz-ios.github.io/meme"
+      target="_blank"
+      rel="noopener"
+      data-id="meme"
+      aria-label="MEME"
+    >
+      <div class="status-green">Online</div>
+      <div class="link-text">
+        <i class="fas fa-image" aria-hidden="true"></i>MEME
+      </div>
+      <div class="click-count">
+        Clicks: <span class="count" data-id="meme">0</span>
+      </div>
+    </a>
+  </div>
+
+  <footer>© 2025 All Websites are Powered by "! CEO YANZZ"</footer>
+
+  <script>
+    setTimeout(() => {
+      const loader = document.getElementById("loader");
+      if (loader) loader.style.display = "none";
+    }, 3500);
+
+    document.querySelectorAll(".link-item").forEach((item) => {
+      const id = item.dataset.id;
+      const countEl = document.querySelector(`.count[data-id="${id}"]`);
+      let count = parseInt(localStorage.getItem("click_" + id) || "0");
+      countEl.textContent = count;
+
+      item.addEventListener("click", () => {
+        count++;
+        localStorage.setItem("click_" + id, count);
+        countEl.textContent = count;
+      });
+    });
+
+    const scene = new THREE.Scene();
+    new THREE.CubeTextureLoader().load(
+      [
+        "https://threejs.org/examples/textures/cube/MilkyWay/dark-s_px.jpg",
+        "https://threejs.org/examples/textures/cube/MilkyWay/dark-s_nx.jpg",
+        "https://threejs.org/examples/textures/cube/MilkyWay/dark-s_py.jpg",
+        "https://threejs.org/examples/textures/cube/MilkyWay/dark-s_ny.jpg",
+        "https://threejs.org/examples/textures/cube/MilkyWay/dark-s_pz.jpg",
+        "https://threejs.org/examples/textures/cube/MilkyWay/dark-s_nz.jpg",
+      ],
+      (texture) => (scene.background = texture)
+    );
+
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas: document.getElementById("bg"),
+      antialias: true,
+    });
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    window.addEventListener("resize", () => {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    });
+
+    const geom = new THREE.BufferGeometry();
+    const verts = [];
+    for (let i = 0; i < 2000; i++) {
+      verts.push((Math.random() - 0.5) * 1000);
+      verts.push((Math.random() - 0.5) * 1000);
+      verts.push((Math.random() - 0.5) * 1000);
+    }
+    geom.setAttribute("position", new THREE.Float32BufferAttribute(verts, 3));
+
+    const stars = new THREE.Points(
+      geom,
+      new THREE.PointsMaterial({ color: 0xffffff, size: 1, sizeAttenuation: true })
+    );
+    scene.add(stars);
+
+    camera.position.z = 200;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      stars.rotation.y += 0.0005;
+      stars.rotation.x += 0.0003;
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+</body>
+  </html>
